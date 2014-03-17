@@ -1,15 +1,15 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'ar/find/in/batches/with/order/version'
+require 'ar-find-in-batches-with-order/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "ar-find-in-batches-with-order"
-  spec.version       = Ar::Find::In::Batches::With::Order::VERSION
+  spec.version       = ActiveRecord::FindInBatchesWithOrder::VERSION
   spec.authors       = ["Nam Chu Hoai"]
   spec.email         = ["nambrot@googlemail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = "Allow find_in_batches with custom order property"
+  spec.description   = "Allow find_in_batches with custom order property"
   spec.homepage      = ""
   spec.license       = "MIT"
 
