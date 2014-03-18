@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["nambrot@googlemail.com"]
   spec.summary       = "Allow find_in_batches with custom order property"
   spec.description   = "Allow find_in_batches with custom order property"
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/nambrot/ar-find-in-batches-with-order"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
