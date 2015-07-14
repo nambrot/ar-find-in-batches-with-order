@@ -13,25 +13,26 @@ module ActiveRecord
 
       # try to deduct the property_key, but safer to specificy directly
       property_key = options.delete(:property_key) || arel.orders.first.try(:value).try(:name)
+      sanitized_key = ActiveRecord::Base::sanitize(property_key)
       relation = relation.limit(batch_size)
 
       # in strictmode, we return records with same values as the last record of the last batch
       strict_mode = options.delete(:strict_mode) || true
 
 
-      records = start ? (direction == :desc ? relation.where(table[property_key].lteq(start)).to_a : relation.where(table[property_key].gteq(start)).to_a)  : relation.to_a
+      records = start ? (direction == :desc ? relation.where("#{sanitized_key} <= ?", start).to_a : relation.where("#{sanitized_key} >= ?", start).to_a)  : relation.to_a
 
-       while records.any?
+      while records.any?
         records_size = records.size
-  
+
         yield records
 
 
         break if records_size < batch_size
-        
+
         start = records.last.try(property_key)
 
-        records = strict_mode ? (direction == :desc ? relation.where(table[property_key].lteq(start)).to_a : relation.where(table[property_key].gteq(start)).to_a) : (direction == :desc ? relation.where(table[property_key].lt(start)).to_a : relation.where(table[property_key].gt(start)).to_a)
+        records = strict_mode ? (direction == :desc ? relation.where("#{sanitized_key} <= ?", start).to_a : relation.where("#{sanitized_key} >= ?", start).to_a) : (direction == :desc ? relation.where("#{sanitized_key} < ?", start).to_a : relation.where("#{sanitized_key} > ?", start).to_a)
       end
     end
 
@@ -40,10 +41,10 @@ module ActiveRecord
       last_record = nil
       find_in_batches_with_order(options) do |records|
 
-        records.each do |record| 
+        records.each do |record|
           # we need to find the last record of the previous batch
           next if last_record and (record != last_record)
-          if last_record 
+          if last_record
             last_record = nil
             next
           end
