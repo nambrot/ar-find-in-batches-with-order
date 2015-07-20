@@ -13,7 +13,7 @@ module ActiveRecord
 
       # try to deduct the property_key, but safer to specificy directly
       property_key = options.delete(:property_key) || arel.orders.first.try(:value).try(:name)
-      sanitized_key = ActiveRecord::Base::sanitize(property_key)
+      sanitized_key = ActiveRecord::Base.connection.quote_column_name(property_key)
       relation = relation.limit(batch_size)
 
       # in strictmode, we return records with same values as the last record of the last batch
