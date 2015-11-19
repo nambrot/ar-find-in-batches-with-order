@@ -2,7 +2,7 @@
 
 Allows you to use find_each and find_each_in_batches with custom ordering.
 
-This is useful if your domain knowledge allows youo to make assumptions about the order of your records. In the vanilla find_each/find_each_in_batches implementation, Rails disables custom ordering to ensure consistency in case ordering changes between batchings.
+This is useful if your domain knowledge allows you to make assumptions about the order of your records. In the vanilla find_each/find_each_in_batches implementation, Rails disables custom ordering to ensure consistency in case ordering changes between batchings.
 
 However, in many cases you know that this would never happen. For example, in acitivity feeds, you might want to batch-find activitites sorted by newest items. You know that new items cannot disrupt the ordering once batching started.
 
