@@ -12,7 +12,7 @@ module ActiveRecord
       batch_size = options.delete(:batch_size) || 1000
 
       # try to deduct the property_key, but safer to specificy directly
-      property_key = options.delete(:property_key) || arel.orders.first.try(:value).try(:name)
+      property_key = options.delete(:property_key) || arel.orders.first.try(:value).try(:name) || arel.orders.first.try(:split,' ').try(:first)
       sanitized_key = ActiveRecord::Base.connection.quote_column_name(property_key)
       relation = relation.limit(batch_size)
 
