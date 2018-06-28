@@ -37,7 +37,7 @@ module ActiveRecord
           end
         end
 
-        without_dups = relation.where.not(id: with_start_ids)
+        without_dups = relation.where.not(relation.klass.primary_key => with_start_ids)
         records = (direction == :desc ? without_dups.where("#{sanitized_key} <= ?", start).to_a : without_dups.where("#{sanitized_key} >= ?", start).to_a)
       end
     end
