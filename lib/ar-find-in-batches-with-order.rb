@@ -14,7 +14,7 @@ module ActiveRecord
 
       # try to deduct the property_key, but safer to specificy directly
       property_key = options.delete(:property_key) || arel.orders.first.try(:value).try(:name) || arel.orders.first.try(:split,' ').try(:first)
-      sanitized_key = ActiveRecord::Base.connection.quote_column_name(property_key)
+      sanitized_key = "#{quoted_table_name}.#{connection.quote_column_name(property_key)}"
       relation = relation.limit(batch_size)
 
       records = start ? (direction == :desc ? relation.where("#{sanitized_key} <= ?", start).to_a : relation.where("#{sanitized_key} >= ?", start).to_a)  : relation.to_a
