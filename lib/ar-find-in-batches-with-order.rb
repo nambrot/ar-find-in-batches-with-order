@@ -14,7 +14,7 @@ module ActiveRecord
 
       # try to deduct the property_key, but safer to specificy directly
       property_key = options.delete(:property_key) || arel.orders.first.try(:value).try(:name) || arel.orders.first.try(:split,' ').try(:first)
-      tbl = connection.quote_table_name(options.delete(:property_table_name) || table.name)
+      tbl = arel.orders.first.try(:value).try(:relation).try(:name) || connection.quote_table_name(options.delete(:property_table_name) || table.name)
       sanitized_key = "#{tbl}.#{connection.quote_column_name(property_key)}"
       relation = relation.limit(batch_size)
 
@@ -24,7 +24,6 @@ module ActiveRecord
         records_size = records.size
 
         yield records
-
 
         break if records_size < batch_size
 
