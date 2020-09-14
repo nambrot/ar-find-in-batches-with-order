@@ -28,12 +28,12 @@ module ActiveRecord
 
         break if records_size < batch_size
 
-        next_start = records.last.try(property_key)
+        next_start = records.last.send(property_key)
         with_start_ids.clear if start != next_start
         start = next_start
 
         records.each do |record|
-          if record.try(property_key) == start
+          if record.send(property_key) == start
             with_start_ids << record.id
           end
         end
