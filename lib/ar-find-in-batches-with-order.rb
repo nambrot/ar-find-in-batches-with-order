@@ -9,6 +9,7 @@ module ActiveRecord
 
       direction = options.delete(:direction) || (arel.orders.first.try(:ascending?) ? :asc : nil) || (arel.orders.first.try(:descending?) ? :desc : nil) || :desc
       start = options.delete(:start)
+      collate = options[:collate] ? "COLLATE #{connection.quote_column_name(options[:collate])}" : ""
       batch_size = options.delete(:batch_size) || 1000
       with_start_ids = []
 
@@ -28,18 +29,18 @@ module ActiveRecord
 
         break if records_size < batch_size
 
-        next_start = records.last.try(property_key)
+        next_start = records.last.send(property_key)
         with_start_ids.clear if start != next_start
         start = next_start
 
         records.each do |record|
-          if record.try(property_key) == start
+          if record.send(property_key) == start
             with_start_ids << record.id
           end
         end
 
         without_dups = relation.where.not(relation.klass.primary_key => with_start_ids)
-        records = (direction == :desc ? without_dups.where("#{sanitized_key} <= ?", start).to_a : without_dups.where("#{sanitized_key} >= ?", start).to_a)
+        records = (direction == :desc ? without_dups.where("#{sanitized_key} <= ? #{collate}", start).to_a : without_dups.where("#{sanitized_key} >= ? #{collate}", start).to_a)
       end
     end
 
