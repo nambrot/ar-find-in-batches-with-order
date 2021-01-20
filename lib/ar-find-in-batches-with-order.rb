@@ -7,7 +7,7 @@ module ActiveRecord
 
       # we have to be explicit about the options to ensure proper ordering and retrieval
 
-      direction = options.delete(:direction) || (arel.orders.first.try(:ascending?) ? :asc : nil) || (arel.orders.first.try(:descending?) ? :desc : nil) || :desc
+      direction = options.delete(:direction) || (arel.orders.first.try(:ascending?) ? :asc : nil) || (arel.orders.first.try(:descending?) ? :desc : nil) || raise "please pass :direction that matches sort order"
       start = options.delete(:start)
       collate = options[:collate] ? "COLLATE #{connection.quote_column_name(options[:collate])}" : ""
       batch_size = options.delete(:batch_size) || 1000
